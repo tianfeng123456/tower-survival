@@ -17,3 +17,4 @@ html,body{touch-action:none;overscroll-behavior:none;-webkit-user-select:none;us
 .build-dock{left:50%!important;right:auto!important;bottom:calc(6px + env(safe-area-inset-bottom))!important;transform:translateX(-50%) scale(.62);transform-origin:bottom center;width:max-content}
 .intro-panel{max-width:92vw;transform:scale(.85)}
 }
+body:not(.playing) #joystick,body:not(.playing) #touch-actions{display:none!important}

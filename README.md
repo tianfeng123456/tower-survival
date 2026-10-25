@@ -75,3 +75,14 @@ npm run textures
 - 寻路采用四邻接整数格流场，密集敌群在墙角可能短暂拥挤。后期大量建筑 / 阴影性能取决于显卡。
 - 40 波经济与难度为可调的初始设计，未经过完整两小时人工平衡验证。
 - 已在联网环境完成 `npm install` 与 `npm run build`（构建成功，主包约 527KB，有体积警告）；无头浏览器可进入游戏并渲染。未做完整 2 小时人工试玩，建造 / 升级 / 胜负流程未在浏览器中逐项手测。
+
+## 部署（GitHub Pages 项目站）
+- `vite.config.js` 中 `base: '/tower-survival/'`，对应 https://tianfeng123456.github.io/tower-survival/ 。若改仓库名或用根域名/Cloudflare Pages，需相应改成 `'/<仓库名>/'` 或 `'/'`。
+- 构建：`npm ci && npm run build`，输出目录 `dist/`（纯静态，运行时不需要 Node）。
+- `public/.nojekyll` 会复制进 dist，避免 Jekyll 处理。单页无前端路由，不需要 404.html 回退。
+- 发布方式：把 `dist/` 推到 `gh-pages` 分支，或用 Actions（upload-pages-artifact 上传 `dist`）。
+- 本地预览：`npm run build && npx vite preview`，然后打开 http://localhost:4173/tower-survival/
+- 注意：https://su-cheng-che.pages.dev 是别人的 Cloudflare Pages 站，与本项目无关。
+
+## 手机操作
+左下虚拟摇杆移动；右侧按钮：建造 / 旋风 / 升级；底部工坊切换墙/塔；右上暂停、加速。触屏点地面不会误建造。键鼠操作保持不变。
