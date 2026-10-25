@@ -21,7 +21,7 @@ export function updateForest(g,dt){let nearest=null,best=2.6;for(const t of g.tr
  g.harvestTree=nearest;if(nearest){nearest.progress+=dt*.42;if(nearest.progress>=1)chopTree(g,nearest);}
  g.harvestRing.visible=!!g.harvestTree;if(g.harvestTree){g.harvestRing.position.set(nearest.x,nearest.height+1,nearest.z);g.harvestRing.rotation.z=-g.time;g.harvestRing.scale.setScalar(.6+nearest.progress*.35);g.harvestFill.geometry.setDrawRange(0,Math.max(0,Math.floor(nearest.progress*64))*6);}
 }
-export function chopTree(g,t){if(!t.alive)return;t.alive=false;t.progress=0;t.regrow=150;g.wood+=10;g.fx.text('+10 木材',t,0xb4f880);g.fx.puff(t,0x86b95e,7);t.model.visible=false;setTreeVisibility(g,t,false);if(g.harvestTree===t)g.harvestTree=null;}
+export function chopTree(g,t){if(!t.alive)return;t.alive=false;t.progress=0;t.regrow=150;const gain=10;g.wood+=gain;if(g.stats)g.stats.chopped=(g.stats.chopped||0)+1;g.fx.text(`+${gain} 木材`,{x:t.x,z:t.z,y:(t.height||3)+1.2},0xb4f880,1.3);g.fx.slash({x:t.x,z:t.z},1.6,0xc8ff8a);g.hud?.pulse?.('wood');g.fx.puff(t,0x86b95e,7);t.model.visible=false;setTreeVisibility(g,t,false);if(g.harvestTree===t)g.harvestTree=null;}
 
 const hiddenTreeMatrix=new THREE.Matrix4().makeScale(0,0,0);
 function setTreeVisibility(g,t,visible){g.forestMeshes.forEach((batch,i)=>{batch.setMatrixAt(t.instanceIndex,visible?t.instanceMatrices[i]:hiddenTreeMatrix);batch.instanceMatrix.needsUpdate=true;});}

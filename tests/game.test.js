@@ -86,3 +86,27 @@ test('all procedural PNG files decode to complete 64×64 RGBA images', () => {
     assert.equal(inflateSync(Buffer.concat(idat)).length, 64 * (64 * 4 + 1));
   }
 });
+
+import { buildBlockReason, BUILD_REASONS } from '../src/buildRules.js';
+import { objectiveStatus } from '../src/objectives.js';
+const opts = { cell: 2, radius: 17, key: (x, z) => `${x},${z}`, cost: 12 };
+const world = (o = {}) => ({ wood: 100, trees: [], enemies: { list: [] }, buildings: { map: new Map() }, ...o });
+test('build block reasons cover every failure case', () => {
+  assert.equal(buildBlockReason(world(), 20, 0, opts), 'bounds');
+  assert.equal(buildBlockReason(world(), 1, 1, opts), 'core');
+  assert.equal(buildBlockReason(world({ buildings: { map: new Map([['5,0', {}]]) } }), 5, 0, opts), 'overlap');
+  assert.equal(buildBlockReason(world({ trees: [{ alive: true, x: 10, z: 0 }] }), 5, 0, opts), 'tree');
+  assert.equal(buildBlockReason(world({ trees: [{ alive: false, x: 10, z: 0 }] }), 5, 0, opts), null);
+  assert.equal(buildBlockReason(world({ enemies: { list: [{ x: 10.5, z: 0 }] } }), 5, 0, opts), 'enemy');
+  assert.equal(buildBlockReason(world({ wood: 3 }), 5, 0, opts), 'wood');
+  assert.equal(buildBlockReason(world(), 5, 0, opts), null);
+  for (const k of ['bounds', 'core', 'overlap', 'tree', 'enemy', 'wood']) assert.ok(BUILD_REASONS[k].short && BUILD_REASONS[k].toast);
+});
+test('opening objectives check off chop, build, wave 1', () => {
+  const g = { stats: { chopped: 0, built: 0 }, waves: { index: -1, queue: 0, giants: 0 }, enemies: { list: [] } };
+  assert.deepEqual(objectiveStatus(g), { chop: false, build: false, wave: false });
+  g.stats.chopped = 1; g.stats.built = 1; g.waves.index = 0; g.waves.queue = 3;
+  assert.deepEqual(objectiveStatus(g), { chop: true, build: true, wave: false });
+  g.waves.queue = 0;
+  assert.equal(objectiveStatus(g).wave, true);
+});

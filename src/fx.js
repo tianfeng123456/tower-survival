@@ -1,8 +1,8 @@
 import {THREE,mesh,group,label,disposeLabel,distance} from './rendering.js';
 export function createFX(g){const particles=[],texts=[],coins=[],rings=[],flashes=[];return {
- text(value,pos,color=0xffffff){if(texts.length>45)return;const m=label(String(value),'#'+color.toString(16).padStart(6,'0'));m.position.set(pos.x,2.5,pos.z);m.scale.multiplyScalar(.7);g.scene.add(m);texts.push({m,life:1});},
+ text(value,pos,color=0xffffff,size=.7){if(texts.length>45)return;const m=label(String(value),'#'+color.toString(16).padStart(6,'0'));m.position.set(pos.x,pos.y>1?pos.y:2.5,pos.z);m.scale.multiplyScalar(size);g.scene.add(m);texts.push({m,life:1});},
  puff(pos,color=0xd4ddc5,count=6){for(let i=0;i<count;i++){if(particles.length>250)break;const m=mesh('sphere',color,pos.x,.6,pos.z,.2,.2,.2);g.scene.add(m);particles.push({m,life:.6,max:.6,v:new THREE.Vector3((Math.random()-.5)*5,2+Math.random()*3,(Math.random()-.5)*5)});}},
- flash(model){if(flashes.some(f=>f.model===model))return;const originals=[];model.traverse(o=>{if(o.isMesh){originals.push([o,o.material]);o.material=flashMaterial;}});flashes.push({model,originals,life:.09});},
+ flash(model){if(flashes.some(f=>f.model===model))return;const originals=[];model.traverse(o=>{if(o.isMesh&&!o.userData.outline&&o.material.type!=='MeshBasicMaterial'){originals.push([o,o.material]);o.material=flashMaterial;}});flashes.push({model,originals,life:.09});},
  slash(pos,r,color){const m=mesh('ring',color,pos.x,.4,pos.z,r,r,r);m.rotation.x=-Math.PI/2;g.scene.add(m);rings.push({m,life:.5,r,max:.5});},
  coin(pos,value){const m=mesh('cylinder',0xffd754,pos.x,.8,pos.z,.23,.10,.23);m.rotation.z=Math.PI/2;g.scene.add(m);coins.push({m,value,age:0,v:new THREE.Vector3((Math.random()-.5)*3,4+Math.random()*2,(Math.random()-.5)*3)});},
  update(dt){for(let i=flashes.length-1;i>=0;i--){let f=flashes[i];f.life-=dt;if(f.life<=0){f.originals.forEach(([m,mat])=>m.material=mat);flashes.splice(i,1);}}

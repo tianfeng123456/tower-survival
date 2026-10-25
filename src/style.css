@@ -18,3 +18,22 @@ html,body{touch-action:none;overscroll-behavior:none;-webkit-user-select:none;us
 .intro-panel{max-width:92vw;transform:scale(.85)}
 }
 body:not(.playing) #joystick,body:not(.playing) #touch-actions{display:none!important}
+/* F3 objectives */
+#objectives{position:absolute;left:calc(24px + env(safe-area-inset-left));top:385px;display:none;flex-direction:column;gap:6px;background:#1d372ce6;border:1px solid #d7ee9a44;border-radius:14px;padding:10px 14px;color:#e0efc1;font-size:12px;z-index:6;transition:opacity .5s}
+body.playing #objectives.shown{display:flex}
+#objectives.hidden{opacity:0;pointer-events:none}
+#objectives .obj{display:flex;align-items:center;gap:8px}
+#objectives .obj-check{width:18px;height:18px;border-radius:50%;border:1px solid #d7ee9a88;display:inline-flex;align-items:center;justify-content:center;font-size:10px}
+#objectives .obj.done{color:#9db199;text-decoration:line-through}
+#objectives .obj.done .obj-check{background:#8bdc5c;color:#173022;border-color:#8bdc5c}
+/* F4 upgrade progress */
+#upgrade{position:relative;overflow:hidden}
+#upgrade-fill{position:absolute;left:0;bottom:0;height:4px;width:0;background:#9bea73;transition:width .3s}
+/* F5 pointer modes */
+.note-touch{display:none}
+body.touch .note-touch{display:inline}body.touch .note-mouse{display:none}
+body.touch .dock-footer,body.touch .world-caption,body.touch .dock-title span,body.touch .edition,body.touch kbd{display:none!important}
+/* F6 feedback */
+.resource.pulse strong{color:#c8ff8a;transform:scale(1.25);display:inline-block;transition:transform .1s}
+#vignette.hurt{box-shadow:inset 0 0 120px #ff3b3b99!important}
+@media(max-width:720px){#objectives{top:auto;bottom:calc(230px + env(safe-area-inset-bottom));font-size:10px;padding:7px 10px}}
